@@ -1,0 +1,14 @@
+{
+  "name": "club-reservation-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright automation for club reservations",
+  "main": "reserve.js",
+  "scripts": {
+    "start": "node reserve.js"
+  },
+  "dependencies": {
+    "playwright": "^1.57.0"
+  }
+}
+
