@@ -16,11 +16,18 @@ function waitUntil7AM() {
   return new Promise(resolve => setTimeout(resolve, delay));
 }
 
-function getNextWeekSameDay() {
+function getNextWeekSameDay(offset = 7) {
   const today = new Date();
   const next = new Date(today);
-  next.setDate(today.getDate() + 6);
+
+  next.setDate(today.getDate() + offset);
+
+  const month = String(next.getMonth() + 1).padStart(2, '0');
+  const day = String(next.getDate()).padStart(2, '0');
+  const year = next.getFullYear();
+
   return {
+    formatted: `${month}/${day}/${year}`, // MM/DD/YYYY for #date input
     dayNumber: next.getDate(),
     fullDate: next.toDateString()
   };
@@ -53,31 +60,28 @@ function getNextWeekSameDay() {
     await page.locator('#component_chosen').getByText('Gym').click();
     await page.getByText('60 Min').click();
 
-    // Open calendar
-    await page.locator('#date').click();
-    await page.locator('#datepicker_100 > .datepickerContainer > table > tbody > tr > td > .datepickerViewDays > thead > tr > .datepickerMonth > .datepickerGoNext > a').click();
+    const nextReservation = getNextWeekSameDay(7); 
+    console.log(`Selecting reservation date: ${nextReservation.fullDate} (${nextReservation.formatted})`);
 
-    // Pick next week's same weekday
-    const nextReservation = getNextWeekSameDay();
-    console.log(`Selecting reservation date: ${nextReservation.fullDate} (day ${nextReservation.dayNumber})`);
-
-    await page.getByRole('link', { name: String(nextReservation.dayNumber) }).first().click();
+    await page.locator('#date').fill(nextReservation.formatted);
+    await page.locator('#date').press('Enter');
 
     await page.locator('a').filter({ hasText: 'All Service Locations' }).click();
     await page.locator('#location_chosen').getByText('Badminton').click();
 
-    await page.locator('#timeFrom_chosen a').filter({ hasText: ':00 AM' }).click();
+   await page.locator('#timeFrom_chosen a').filter({ hasText: ':00 AM' }).click();
     await page.locator('#timeFrom_chosen').getByText('6:00 PM').click();
 
     await page.locator('a').filter({ hasText: '12:00 AM' }).click();
     await page.locator('#timeTo_chosen').getByText('7:00 PM').click();
 
-    // await waitUntil7AM();
+    // Uncomment for real scheduled runs
+    await waitUntil7AM();
 
     const start = Date.now();
 
     await page.getByRole('button', { name: 'Search' }).click();
-    await page.getByRole('link', { name: '11:00am' }).first().click();
+    await page.getByRole('link', { name: '6:00pm' }).first().click();
     await page.getByRole('button', { name: 'Confirm' }).click();
     await page.getByRole('button', { name: 'Ok' }).click();
 
