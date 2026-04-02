@@ -2,13 +2,13 @@ name: Reserve Slot
 
 on:
   schedule:
-    - cron: '07 11 * * 0,1,5,6'
+    - cron: '50 10 * * 0,1,5,6'
   workflow_dispatch:
 
 jobs:
   reserve:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 75
 
     steps:
       - name: Checkout repository
