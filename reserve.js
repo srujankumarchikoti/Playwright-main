@@ -95,7 +95,7 @@ if (today === 5) {
     const start = Date.now();
 
     await page.getByRole('button', { name: 'Search' }).click();
-    await page.getByRole('link', { name: '12:00pm' }).first().click();
+    await page.getByRole('link', { name: '6:00pm' }).first().click();
     await page.getByRole('button', { name: 'Confirm' }).click();
     await page.getByRole('button', { name: 'Ok' }).click();
 
